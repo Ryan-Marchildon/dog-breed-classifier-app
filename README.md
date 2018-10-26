@@ -25,5 +25,7 @@ Uses the [nginx](https://www.nginx.com/) --> [gunicorn](https://gunicorn.org/) -
 
 * `/container`: Holds all the files necessary for building and testing a Docker image of the web app using the nginx-->gunicorn-->Flask stack. To build the container locally, run `build_local.sh` from this directory (first ensure you have set up Docker to [run without sudo privileges](https://docs.docker.com/install/linux/linux-postinstall/)). The script `build_and_push.sh` will be used later when deploying the container via AWS SageMaker. Within `/local_test`, run `serve_local.sh` to locally host the container, and use `run_tests.sh` and `predict.sh` for testing and debugging. Executing the terminal command `$ ./predict.sh <JPG Image Path>` from this directory will send an image to the locally-hosted container and retrieve the inferred dog breed. The inferences are returned as a .csv, showing the top 5 most probable breeds and their associated probabilities. The subdirectory `/test_dir` contains the files needed for model and one-hot-decoder construction. 
 
+**Sample Output**:
+After executing `run_tests.sh` from terminal for a locally-hosted docker container with the included test images:
 
-
+![sample output](https://raw.githubusercontent.com/Ryan-Marchildon/dog-breed-classifier-app/master/container/local_test/run_tests-output.png)
