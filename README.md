@@ -3,7 +3,7 @@ Building a simple dog breed classification app for Android with deployment on Am
 
 (Note: still under development)
 
-### Model
+### 1) Model
 
 **Description**:
 
@@ -14,3 +14,16 @@ Model source files are found within the `/model` directory. The model was built 
 **Testing/Usage**:
 
 To perform inference on a raw JPG image, use `classify.py` via the terminal command `python -m classify file <JPG Image Path>` while within the `/model` directory (run the bash file `test.sh`for an example). The `classify.py` script unfreezes our model (from the `.pb` file extension) into a TensorFlow graph and starts a TensorFlow session to perform the inference. Preprocessing of the raw image is already included within the model definition.
+
+
+### 2) Containerized Web App
+
+Uses the [nginx](https://www.nginx.com/) --> [gunicorn](https://gunicorn.org/) --> [Flask](http://flask.pocoo.org/) Python stack. For a guide outlining a similar approach, see [this AWS SageMaker example](https://github.com/awslabs/amazon-sagemaker-examples/blob/master/advanced_functionality/scikit_bring_your_own/scikit_bring_your_own.ipynb).
+
+**Relevant Directories**: 
+* `/flask_dev`: Contains development files for deploying and testing the classifier locally via Flask (without the added complexity of nginx, gunicorn, or Docker). You can run the app via the terminal command `$ python predictor.py`. The shell scripts `ping.sh`, `predict.sh`, and `run_tests.sh` can be used for testing and debugging. The subdirectory `/test_dir` contains the frozen model, list of classes (breeds.csv), and two ipython notebooks that were used to test a consolidated implementation (all-in-one-file) of the classifier. 
+
+* `/container`: Holds all the files necessary for building and testing a Docker image of the web app using the nginx-->gunicorn-->Flask stack. To build the container locally, run `build_local.sh` from this directory (first ensure you have set up Docker to [run without sudo privileges](https://docs.docker.com/install/linux/linux-postinstall/)). The script `build_and_push.sh` will be used later when deploying the container via AWS SageMaker. Within `/local_test`, run `serve_local.sh` to locally host the container, and use `run_tests.sh` and `predict.sh` for testing and debugging. Executing the terminal command `$ ./predict.sh <JPG Image Path>` from this directory will send an image to the locally-hosted container and retrieve the inferred dog breed. The inferences are returned as a .csv, showing the top 5 most probable breeds and their associated probabilities. The subdirectory `/test_dir` contains the files needed for model and one-hot-decoder construction. 
+
+
+
